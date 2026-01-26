@@ -470,7 +470,7 @@ func TestCallbackRequestJSON(t *testing.T) {
 	if callback.Status != StatusSuccess {
 		t.Errorf("Status = %v, want %v", callback.Status, StatusSuccess)
 	}
-	if callback.StatusCode != StatusCodeSuccess {
+	if callback.StatusCode.TransactionStatusCode() != StatusCodeSuccess {
 		t.Errorf("StatusCode = %v, want %v", callback.StatusCode, StatusCodeSuccess)
 	}
 }

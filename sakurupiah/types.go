@@ -353,11 +353,18 @@ const (
 // The RawPayload field contains the original JSON bytes used for
 // signature verification. This is automatically populated when using
 // VerifyAndParseCallback().
+//
+// # Note on status_kode Field
+//
+// The StatusCode field uses FlexibleStatusCode because the Sakurupiah API
+// sends status_kode as a string (e.g., "1", "0", "-2") despite the
+// documentation showing it as an integer. The FlexibleStatusCode type
+// handles both formats automatically.
 type CallbackRequest struct {
 	TrxID       string                 `json:"trx_id"`
 	MerchantRef string                 `json:"merchant_ref"`
 	Status      TransactionStatusValue `json:"status"`
-	StatusCode  TransactionStatusCode  `json:"status_kode"`
+	StatusCode  FlexibleStatusCode     `json:"status_kode"`
 	RawPayload  []byte                 `json:"-"` // Raw JSON payload for signature verification
 }
 

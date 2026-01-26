@@ -27,7 +27,7 @@ func TestVerifyAndParseCallback(t *testing.T) {
 		TrxID:       "TRX123",
 		MerchantRef: "REF123",
 		Status:      StatusSuccess,
-		StatusCode:  StatusCodeSuccess,
+		StatusCode:  FlexibleStatusCode(StatusCodeSuccess),
 	}
 
 	jsonPayload, err := json.Marshal(callbackPayload)
@@ -140,7 +140,7 @@ func TestHandleCallbackWithFunc(t *testing.T) {
 		TrxID:       "TRX123",
 		MerchantRef: "REF123",
 		Status:      StatusSuccess,
-		StatusCode:  StatusCodeSuccess,
+		StatusCode:  FlexibleStatusCode(StatusCodeSuccess),
 	}
 
 	jsonPayload, err := json.Marshal(callbackPayload)
@@ -239,7 +239,7 @@ func TestNewCallbackHandler(t *testing.T) {
 		TrxID:       "TRX123",
 		MerchantRef: "REF123",
 		Status:      StatusSuccess,
-		StatusCode:  StatusCodeSuccess,
+		StatusCode:  FlexibleStatusCode(StatusCodeSuccess),
 	}
 
 	jsonPayload, err := json.Marshal(callbackPayload)
@@ -420,7 +420,7 @@ func TestCallbackHandlerBuilder(t *testing.T) {
 				TrxID:       "TRX123",
 				MerchantRef: "REF123",
 				Status:      tt.status,
-				StatusCode:  tt.code,
+				StatusCode:  FlexibleStatusCode(tt.code),
 			}
 
 			jsonPayload, _ := json.Marshal(callbackPayload)
@@ -537,7 +537,7 @@ func TestCallbackHandlerErrorHandling(t *testing.T) {
 		TrxID:       "TRX123",
 		MerchantRef: "REF123",
 		Status:      StatusSuccess,
-		StatusCode:  StatusCodeSuccess,
+		StatusCode:  FlexibleStatusCode(StatusCodeSuccess),
 	}
 
 	jsonPayload, _ := json.Marshal(callbackPayload)
