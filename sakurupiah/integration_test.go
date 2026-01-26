@@ -17,8 +17,8 @@ const (
 // getIntegrationClient returns a client configured for sandbox testing
 func getIntegrationClient() (*Client, error) {
 	return NewClient(Config{
-		APIID:    sandboxAPIID,
-		APIKey:   sandboxAPIKey,
+		APIID:     sandboxAPIID,
+		APIKey:    sandboxAPIKey,
 		IsSandbox: true,
 	})
 }
@@ -144,42 +144,42 @@ func TestIntegrationCreateInvoice(t *testing.T) {
 		{
 			name: "valid QRIS invoice",
 			req: CreateInvoiceRequest{
-				Method:       "QRIS",
-				CustomerName: "Integration Test",
+				Method:        "QRIS",
+				CustomerName:  "Integration Test",
 				CustomerEmail: "test@example.com",
 				CustomerPhone: "628123456789",
-				Amount:       10000,
-				MerchantFee:  int(FeeTypeMerchant),
-				MerchantRef:  merchantRef + "-QRIS",
-				CallbackURL:  "https://example.com/callback",
-				ReturnURL:    "https://example.com/return",
+				Amount:        10000,
+				MerchantFee:   int(FeeTypeMerchant),
+				MerchantRef:   merchantRef + "-QRIS",
+				CallbackURL:   "https://example.com/callback",
+				ReturnURL:     "https://example.com/return",
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid BCAVA invoice",
 			req: CreateInvoiceRequest{
-				Method:       "BCAVA",
-				CustomerName: "Integration Test",
+				Method:        "BCAVA",
+				CustomerName:  "Integration Test",
 				CustomerPhone: "628123456789",
-				Amount:       20000,
-				MerchantFee:  int(FeeTypeMerchant),
-				MerchantRef:  merchantRef + "-BCAVA",
-				CallbackURL:  "https://example.com/callback",
-				ReturnURL:    "https://example.com/return",
+				Amount:        20000,
+				MerchantFee:   int(FeeTypeMerchant),
+				MerchantRef:   merchantRef + "-BCAVA",
+				CallbackURL:   "https://example.com/callback",
+				ReturnURL:     "https://example.com/return",
 			},
 			wantErr: false,
 		},
 		{
 			name: "invoice with products",
 			req: CreateInvoiceRequest{
-				Method:       "DANA",
-				CustomerName: "Integration Test",
+				Method:        "DANA",
+				CustomerName:  "Integration Test",
 				CustomerPhone: "628123456789",
-				Amount:       50000,
-				MerchantFee:  int(FeeTypeCustomer),
-				MerchantRef:  merchantRef + "-PRODUCTS",
-				Expired:      12,
+				Amount:        50000,
+				MerchantFee:   int(FeeTypeCustomer),
+				MerchantRef:   merchantRef + "-PRODUCTS",
+				Expired:       12,
 				Products: []Product{
 					{Name: "Test Product 1", Qty: 1, Price: 25000, Size: "L", Note: "Blue"},
 					{Name: "Test Product 2", Qty: 1, Price: 25000, Size: "M", Note: "Red"},
@@ -388,14 +388,14 @@ func TestIntegrationGetTransactionStatus(t *testing.T) {
 	// First, create a test invoice to get a valid TrxID
 	merchantRef := fmt.Sprintf("TEST-STATUS-%d", time.Now().UnixNano())
 	createReq := CreateInvoiceRequest{
-		Method:       "QRIS",
-		CustomerName: "Status Test",
+		Method:        "QRIS",
+		CustomerName:  "Status Test",
 		CustomerPhone: "628123456789",
-		Amount:       10000,
-		MerchantFee:  int(FeeTypeMerchant),
-		MerchantRef:  merchantRef,
-		CallbackURL:  "https://example.com/callback",
-		ReturnURL:    "https://example.com/return",
+		Amount:        10000,
+		MerchantFee:   int(FeeTypeMerchant),
+		MerchantRef:   merchantRef,
+		CallbackURL:   "https://example.com/callback",
+		ReturnURL:     "https://example.com/return",
 	}
 
 	createResp, err := client.CreateInvoice(createReq)
@@ -528,13 +528,13 @@ func TestIntegrationErrorHandling(t *testing.T) {
 	t.Run("invalid payment method", func(t *testing.T) {
 		merchantRef := fmt.Sprintf("TEST-ERROR-%d", time.Now().UnixNano())
 		req := CreateInvoiceRequest{
-			Method:       "INVALID_METHOD",
+			Method:        "INVALID_METHOD",
 			CustomerPhone: "628123456789",
-			Amount:       10000,
-			MerchantFee:  int(FeeTypeMerchant),
-			MerchantRef:  merchantRef,
-			CallbackURL:  "https://example.com/callback",
-			ReturnURL:    "https://example.com/return",
+			Amount:        10000,
+			MerchantFee:   int(FeeTypeMerchant),
+			MerchantRef:   merchantRef,
+			CallbackURL:   "https://example.com/callback",
+			ReturnURL:     "https://example.com/return",
 		}
 
 		_, err := client.CreateInvoice(req)
@@ -581,14 +581,14 @@ func TestIntegrationMinimumAmount(t *testing.T) {
 			merchantRef := fmt.Sprintf("TEST-MIN-%s-%d", tt.method, time.Now().UnixNano())
 
 			req := CreateInvoiceRequest{
-				Method:       tt.method,
-				CustomerName: "Min Amount Test",
+				Method:        tt.method,
+				CustomerName:  "Min Amount Test",
 				CustomerPhone: "628123456789",
-				Amount:       tt.minAmount,
-				MerchantFee:  int(FeeTypeMerchant),
-				MerchantRef:  merchantRef,
-				CallbackURL:  "https://example.com/callback",
-				ReturnURL:    "https://example.com/return",
+				Amount:        tt.minAmount,
+				MerchantFee:   int(FeeTypeMerchant),
+				MerchantRef:   merchantRef,
+				CallbackURL:   "https://example.com/callback",
+				ReturnURL:     "https://example.com/return",
 			}
 
 			resp, err := client.CreateInvoice(req)

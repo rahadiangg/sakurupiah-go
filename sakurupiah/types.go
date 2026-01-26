@@ -99,24 +99,24 @@ type Product struct {
 //   - QR: QR code string for QRIS payments
 //   - PaymentNo: Payment number/account for DIRECT payment methods
 type InvoiceData struct {
-	Via           string `json:"via"`
-	PaymentCode   string `json:"payment_kode"`
-	TrxID         string `json:"trx_id"`
-	MerchantRef   string `json:"merchant_ref"`
-	Name          string `json:"nama"`
-	Email         string `json:"email"`
-	Phone         string `json:"phone"`
-	Total         int64  `json:"total"`
-	MerchantFee   string `json:"merchant_fee"`
-	Fee           int64  `json:"fee"`
-	AmountMerchant int64  `json:"amount_merchant"`
-	Date          string `json:"date"`
-	Time          string `json:"time"`
-	Expired       string `json:"expired"`
-	PaymentStatus string          `json:"payment_status"`
-	QR            string          `json:"qr,omitempty"`           // For QRIS payments
-	PaymentNo     FlexibleString `json:"payment_no,omitempty"`   // Payment number (can be string or number in response)
-	CheckoutURL   string          `json:"checkout_url,omitempty"` // Checkout URL
+	Via            string         `json:"via"`
+	PaymentCode    string         `json:"payment_kode"`
+	TrxID          string         `json:"trx_id"`
+	MerchantRef    string         `json:"merchant_ref"`
+	Name           string         `json:"nama"`
+	Email          string         `json:"email"`
+	Phone          string         `json:"phone"`
+	Total          int64          `json:"total"`
+	MerchantFee    string         `json:"merchant_fee"`
+	Fee            int64          `json:"fee"`
+	AmountMerchant int64          `json:"amount_merchant"`
+	Date           string         `json:"date"`
+	Time           string         `json:"time"`
+	Expired        string         `json:"expired"`
+	PaymentStatus  string         `json:"payment_status"`
+	QR             string         `json:"qr,omitempty"`           // For QRIS payments
+	PaymentNo      FlexibleString `json:"payment_no,omitempty"`   // Payment number (can be string or number in response)
+	CheckoutURL    string         `json:"checkout_url,omitempty"` // Checkout URL
 }
 
 // ProductResponse represents a product in the response.
@@ -124,11 +124,11 @@ type InvoiceData struct {
 // Similar to Product but uses FlexibleString for quantity since the API
 // may return either a string or number for this field.
 type ProductResponse struct {
-	Name  string          `json:"nama_produk"`
-	Qty   FlexibleString `json:"qty"`  // Can be string or number in response
-	Price int64           `json:"harga"`
-	Size  string          `json:"size,omitempty"`
-	Note  string          `json:"note,omitempty"`
+	Name  string         `json:"nama_produk"`
+	Qty   FlexibleString `json:"qty"` // Can be string or number in response
+	Price int64          `json:"harga"`
+	Size  string         `json:"size,omitempty"`
+	Note  string         `json:"note,omitempty"`
 }
 
 // CreateInvoiceResponse represents the response from creating an invoice.
@@ -167,17 +167,17 @@ type ListPaymentChannelsResponse struct {
 //   - Type: "DIRECT" (customer pays directly) or "REDIRECT" (redirect to payment page)
 //   - Guide: Payment instructions for customers
 type PaymentChannel struct {
-	Code     string              `json:"kode"`
-	Name     string              `json:"nama"`
-	Min      string              `json:"minimal"`
-	Max      string              `json:"maksimal"`
-	Fee      string              `json:"biaya"`
-	Percent  string              `json:"percent"`
-	Type     string              `json:"tipe"` // DIRECT or REDIRECT
-	Logo     string              `json:"logo"`
-	Status   string              `json:"status"` // Aktif or Offline
+	Code     string                 `json:"kode"`
+	Name     string                 `json:"nama"`
+	Min      string                 `json:"minimal"`
+	Max      string                 `json:"maksimal"`
+	Fee      string                 `json:"biaya"`
+	Percent  string                 `json:"percent"`
+	Type     string                 `json:"tipe"` // DIRECT or REDIRECT
+	Logo     string                 `json:"logo"`
+	Status   string                 `json:"status"` // Aktif or Offline
 	Addition PaymentChannelAddition `json:"addition"`
-	Guide    PaymentGuide        `json:"guide"`
+	Guide    PaymentGuide           `json:"guide"`
 }
 
 // PaymentChannelAddition contains additional payment channel info.
@@ -185,10 +185,10 @@ type PaymentChannel struct {
 // Provides extended information about a payment channel including
 // fee structure, default expiration time, and settlement schedule.
 type PaymentChannelAddition struct {
-	ExtraFee     string `json:"tambahan_biaya"`
-	Type         string `json:"jenis"`      // Nominal or Percent
-	DefaultExp   string `json:"default_expired"`
-	Settlement   string `json:"settlement"` // Settlement time
+	ExtraFee   string `json:"tambahan_biaya"`
+	Type       string `json:"jenis"` // Nominal or Percent
+	DefaultExp string `json:"default_expired"`
+	Settlement string `json:"settlement"` // Settlement time
 }
 
 // PaymentGuide contains payment instructions.
@@ -196,8 +196,8 @@ type PaymentChannelAddition struct {
 // Provides human-readable payment instructions that can be displayed
 // to customers to guide them through the payment process.
 type PaymentGuide struct {
-	Title          string `json:"title"`
-	PaymentGuide   string `json:"payment_guide"`
+	Title        string `json:"title"`
+	PaymentGuide string `json:"payment_guide"`
 }
 
 // ============================================================
@@ -223,9 +223,9 @@ type CheckBalanceResponse struct {
 //
 // Settlement times vary by payment method (typically H+1 to H+3).
 type BalanceData struct {
-	MerchantName    string `json:"nama_merchant"`
-	Balance         string `json:"balance"`          // Pending settlement balance
-	AvailableBalance string `json:"saldo_tersedia"`  // Available balance
+	MerchantName     string `json:"nama_merchant"`
+	Balance          string `json:"balance"`        // Pending settlement balance
+	AvailableBalance string `json:"saldo_tersedia"` // Available balance
 }
 
 // ============================================================
@@ -277,14 +277,14 @@ type TransactionHistoryResponse struct {
 //   - FormatExpiredTime(): Parse the expiration time into time.Time
 //   - FormatDateTime(): Parse the transaction datetime into time.Time
 type TransactionHistoryItem struct {
-	TrxID        string `json:"trx_id"`
-	MerchantRef  string `json:"merchant_ref"`
-	PaymentCode  string `json:"payment_kode"`
-	Date         string `json:"tanggal"`
-	Time         string `json:"waktu"`
-	Amount       string `json:"amount"`
-	Expired      string `json:"expired"`
-	Status       string `json:"status"`
+	TrxID       string `json:"trx_id"`
+	MerchantRef string `json:"merchant_ref"`
+	PaymentCode string `json:"payment_kode"`
+	Date        string `json:"tanggal"`
+	Time        string `json:"waktu"`
+	Amount      string `json:"amount"`
+	Expired     string `json:"expired"`
+	Status      string `json:"status"`
 }
 
 // ============================================================
@@ -354,11 +354,11 @@ const (
 // signature verification. This is automatically populated when using
 // VerifyAndParseCallback().
 type CallbackRequest struct {
-	TrxID        string                 `json:"trx_id"`
-	MerchantRef  string                 `json:"merchant_ref"`
-	Status       TransactionStatusValue `json:"status"`
-	StatusCode   TransactionStatusCode  `json:"status_kode"`
-	RawPayload   []byte                 `json:"-"` // Raw JSON payload for signature verification
+	TrxID       string                 `json:"trx_id"`
+	MerchantRef string                 `json:"merchant_ref"`
+	Status      TransactionStatusValue `json:"status"`
+	StatusCode  TransactionStatusCode  `json:"status_kode"`
+	RawPayload  []byte                 `json:"-"` // Raw JSON payload for signature verification
 }
 
 // CallbackHeaders represents the headers from callback.

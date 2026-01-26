@@ -264,48 +264,48 @@ func TestNewCallbackHandler(t *testing.T) {
 	handler := client.NewCallbackHandler(handlerFunc)
 
 	tests := []struct {
-		name           string
-		method         string
-		signature      string
-		event          string
-		body           []byte
-		wantStatus     int
+		name              string
+		method            string
+		signature         string
+		event             string
+		body              []byte
+		wantStatus        int
 		wantHandlerCalled bool
 	}{
 		{
-			name:       "valid POST request",
-			method:     http.MethodPost,
-			signature:  validSignature,
-			event:      "payment_status",
-			body:       jsonPayload,
-			wantStatus: http.StatusOK,
+			name:              "valid POST request",
+			method:            http.MethodPost,
+			signature:         validSignature,
+			event:             "payment_status",
+			body:              jsonPayload,
+			wantStatus:        http.StatusOK,
 			wantHandlerCalled: true,
 		},
 		{
-			name:       "invalid method",
-			method:     http.MethodGet,
-			signature:  validSignature,
-			event:      "payment_status",
-			body:       jsonPayload,
-			wantStatus: http.StatusMethodNotAllowed,
+			name:              "invalid method",
+			method:            http.MethodGet,
+			signature:         validSignature,
+			event:             "payment_status",
+			body:              jsonPayload,
+			wantStatus:        http.StatusMethodNotAllowed,
 			wantHandlerCalled: false,
 		},
 		{
-			name:       "invalid signature",
-			method:     http.MethodPost,
-			signature:  "invalid",
-			event:      "payment_status",
-			body:       jsonPayload,
-			wantStatus: http.StatusBadRequest,
+			name:              "invalid signature",
+			method:            http.MethodPost,
+			signature:         "invalid",
+			event:             "payment_status",
+			body:              jsonPayload,
+			wantStatus:        http.StatusBadRequest,
 			wantHandlerCalled: false,
 		},
 		{
-			name:       "invalid event",
-			method:     http.MethodPost,
-			signature:  validSignature,
-			event:      "invalid_event",
-			body:       jsonPayload,
-			wantStatus: http.StatusBadRequest,
+			name:              "invalid event",
+			method:            http.MethodPost,
+			signature:         validSignature,
+			event:             "invalid_event",
+			body:              jsonPayload,
+			wantStatus:        http.StatusBadRequest,
 			wantHandlerCalled: false,
 		},
 	}
@@ -334,7 +334,7 @@ func TestNewCallbackHandler(t *testing.T) {
 			}
 
 			// Check response content type
-		 contentType := w.Header().Get("Content-Type")
+			contentType := w.Header().Get("Content-Type")
 			if contentType != "application/json" {
 				t.Errorf("Content-Type = %v, want application/json", contentType)
 			}

@@ -9,29 +9,29 @@ import (
 // TestTransactionStatusValue tests the transaction status value methods
 func TestTransactionStatusValue(t *testing.T) {
 	tests := []struct {
-		name   string
-		status TransactionStatusValue
+		name      string
+		status    TransactionStatusValue
 		isPending bool
 		isSuccess bool
 		isExpired bool
 	}{
 		{
-			name:   "pending status",
-			status: StatusPending,
+			name:      "pending status",
+			status:    StatusPending,
 			isPending: true,
 			isSuccess: false,
 			isExpired: false,
 		},
 		{
-			name:   "success status",
-			status: StatusSuccess,
+			name:      "success status",
+			status:    StatusSuccess,
 			isPending: false,
 			isSuccess: true,
 			isExpired: false,
 		},
 		{
-			name:   "expired status",
-			status: StatusExpired,
+			name:      "expired status",
+			status:    StatusExpired,
 			isPending: false,
 			isSuccess: false,
 			isExpired: true,
@@ -136,27 +136,27 @@ func TestCreateInvoiceRequestValidation(t *testing.T) {
 		{
 			name: "valid minimal request",
 			req: CreateInvoiceRequest{
-				Method:       "QRIS",
+				Method:        "QRIS",
 				CustomerPhone: "628123456789",
-				Amount:       10000,
-				MerchantRef:  "REF123",
-				MerchantFee:  1,
-				CallbackURL:  "https://example.com/callback",
-				ReturnURL:    "https://example.com/return",
+				Amount:        10000,
+				MerchantRef:   "REF123",
+				MerchantFee:   1,
+				CallbackURL:   "https://example.com/callback",
+				ReturnURL:     "https://example.com/return",
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid full request with products",
 			req: CreateInvoiceRequest{
-				Method:       "QRIS",
-				CustomerName: "John Doe",
+				Method:        "QRIS",
+				CustomerName:  "John Doe",
 				CustomerEmail: "john@example.com",
 				CustomerPhone: "628123456789",
-				Amount:       10000,
-				MerchantRef:  "REF123",
-				MerchantFee:  2,
-				Expired:      24,
+				Amount:        10000,
+				MerchantRef:   "REF123",
+				MerchantFee:   2,
+				Expired:       24,
 				Products: []Product{
 					{Name: "Product 1", Qty: 1, Price: 5000},
 					{Name: "Product 2", Qty: 2, Price: 2500},
@@ -187,29 +187,29 @@ func TestCreateInvoiceRequestValidation(t *testing.T) {
 		{
 			name: "invalid amount - zero",
 			req: CreateInvoiceRequest{
-				Method:       "QRIS",
+				Method:        "QRIS",
 				CustomerPhone: "628123456789",
-				Amount:       0,
-				MerchantRef:  "REF123",
+				Amount:        0,
+				MerchantRef:   "REF123",
 			},
 			wantErr: true,
 		},
 		{
 			name: "invalid amount - negative",
 			req: CreateInvoiceRequest{
-				Method:       "QRIS",
+				Method:        "QRIS",
 				CustomerPhone: "628123456789",
-				Amount:       -100,
-				MerchantRef:  "REF123",
+				Amount:        -100,
+				MerchantRef:   "REF123",
 			},
 			wantErr: true,
 		},
 		{
 			name: "missing merchant ref",
 			req: CreateInvoiceRequest{
-				Method:       "QRIS",
+				Method:        "QRIS",
 				CustomerPhone: "628123456789",
-				Amount:       10000,
+				Amount:        10000,
 			},
 			wantErr: true,
 		},
@@ -326,8 +326,8 @@ func TestTransactionHistoryRequestTests(t *testing.T) {
 		valid bool
 	}{
 		{
-			name: "empty request - valid",
-			req:  TransactionHistoryRequest{},
+			name:  "empty request - valid",
+			req:   TransactionHistoryRequest{},
 			valid: true,
 		},
 		{
@@ -401,15 +401,15 @@ func TestTransactionHistoryRequestTests(t *testing.T) {
 // TestPaymentChannelFields tests payment channel struct fields
 func TestPaymentChannelFields(t *testing.T) {
 	channel := PaymentChannel{
-		Code:   "QRIS",
-		Name:   "QRIS Payment",
-		Min:    "500",
-		Max:    "2000000",
-		Fee:    "0.7",
+		Code:    "QRIS",
+		Name:    "QRIS Payment",
+		Min:     "500",
+		Max:     "2000000",
+		Fee:     "0.7",
 		Percent: "Percent",
-		Type:   "DIRECT",
-		Logo:   "https://example.com/qris.png",
-		Status: "Aktif",
+		Type:    "DIRECT",
+		Logo:    "https://example.com/qris.png",
+		Status:  "Aktif",
 		Addition: PaymentChannelAddition{
 			ExtraFee:   "350",
 			Type:       "Nominal",

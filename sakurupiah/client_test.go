@@ -19,8 +19,8 @@ func TestNewClient(t *testing.T) {
 		{
 			name: "valid config - production",
 			config: Config{
-				APIID:    "TEST-12345",
-				APIKey:   "test-key-12345",
+				APIID:     "TEST-12345",
+				APIKey:    "test-key-12345",
 				IsSandbox: false,
 			},
 			wantErr: nil,
@@ -28,8 +28,8 @@ func TestNewClient(t *testing.T) {
 		{
 			name: "valid config - sandbox",
 			config: Config{
-				APIID:    "SANBOX-12345",
-				APIKey:   "sandbox-key-12345",
+				APIID:     "SANBOX-12345",
+				APIKey:    "sandbox-key-12345",
 				IsSandbox: true,
 			},
 			wantErr: nil,
@@ -37,10 +37,10 @@ func TestNewClient(t *testing.T) {
 		{
 			name: "valid config with custom timeout",
 			config: Config{
-				APIID:    "TEST-12345",
-				APIKey:   "test-key-12345",
+				APIID:     "TEST-12345",
+				APIKey:    "test-key-12345",
 				IsSandbox: false,
-				Timeout:  60 * time.Second,
+				Timeout:   60 * time.Second,
 			},
 			wantErr: nil,
 		},
@@ -49,16 +49,16 @@ func TestNewClient(t *testing.T) {
 			config: Config{
 				APIID:              "TEST-12345",
 				APIKey:             "test-key-12345",
-				IsSandbox:           false,
-				DefaultCallbackURL:  "https://example.com/callback",
-				DefaultReturnURL:    "https://example.com/return",
+				IsSandbox:          false,
+				DefaultCallbackURL: "https://example.com/callback",
+				DefaultReturnURL:   "https://example.com/return",
 			},
 			wantErr: nil,
 		},
 		{
 			name: "missing API ID",
 			config: Config{
-				APIKey:   "test-key-12345",
+				APIKey:    "test-key-12345",
 				IsSandbox: false,
 			},
 			wantErr: ErrMissingAPIID,
@@ -66,7 +66,7 @@ func TestNewClient(t *testing.T) {
 		{
 			name: "missing API Key",
 			config: Config{
-				APIID:    "TEST-12345",
+				APIID:     "TEST-12345",
 				IsSandbox: false,
 			},
 			wantErr: ErrMissingAPIKey,
@@ -134,9 +134,9 @@ func TestClientGetters(t *testing.T) {
 	config := Config{
 		APIID:              "TEST-12345",
 		APIKey:             "test-key-12345",
-		IsSandbox:           true,
-		DefaultCallbackURL:  "https://example.com/callback",
-		DefaultReturnURL:    "https://example.com/return",
+		IsSandbox:          true,
+		DefaultCallbackURL: "https://example.com/callback",
+		DefaultReturnURL:   "https://example.com/return",
 	}
 
 	client, err := NewClient(config)
@@ -350,27 +350,27 @@ func TestVerifyCallbackSignature(t *testing.T) {
 // TestBaseURLs tests that the correct base URLs are used
 func TestBaseURLs(t *testing.T) {
 	tests := []struct {
-		name     string
+		name      string
 		isSandbox bool
-		wantURL  string
+		wantURL   string
 	}{
 		{
-			name:     "production URL",
+			name:      "production URL",
 			isSandbox: false,
-			wantURL:  ProductionBaseURL,
+			wantURL:   ProductionBaseURL,
 		},
 		{
-			name:     "sandbox URL",
+			name:      "sandbox URL",
 			isSandbox: true,
-			wantURL:  SandboxBaseURL,
+			wantURL:   SandboxBaseURL,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			client, err := NewClient(Config{
-				APIID:    "TEST-12345",
-				APIKey:   "test-key-12345",
+				APIID:     "TEST-12345",
+				APIKey:    "test-key-12345",
 				IsSandbox: tt.isSandbox,
 			})
 			if err != nil {
@@ -413,9 +413,9 @@ func TestCustomHTTPClient(t *testing.T) {
 // TestErrorDefinitions tests that error variables are properly defined
 func TestErrorDefinitions(t *testing.T) {
 	tests := []struct {
-		name  string
-		err   error
-		want  string
+		name string
+		err  error
+		want string
 	}{
 		{
 			name: "ErrMissingAPIID",

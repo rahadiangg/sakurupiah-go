@@ -11,8 +11,8 @@ import (
 func main() {
 	// Create a new client
 	client, err := sakurupiah.NewClient(sakurupiah.Config{
-		APIID:    "YOUR_API_ID",
-		APIKey:   "YOUR_API_KEY",
+		APIID:     "YOUR_API_ID",
+		APIKey:    "YOUR_API_KEY",
 		IsSandbox: true, // Use true for testing, false for production
 	})
 	if err != nil {
@@ -45,11 +45,11 @@ func main() {
 
 	// Example 3: Create a simple invoice
 	invoiceResp, err := client.CreateInvoiceSimple(
-		sakurupiah.MethodQRIS,        // Payment method
-		"John Doe",                   // Customer name
-		"628123456789",              // Customer phone
-		10000,                        // Amount
-		"INV-2025-001",              // Merchant reference
+		sakurupiah.MethodQRIS, // Payment method
+		"John Doe",            // Customer name
+		"628123456789",        // Customer phone
+		10000,                 // Amount
+		"INV-2025-001",        // Merchant reference
 		"https://yourdomain.com/callback",
 		"https://yourdomain.com/return",
 	)
@@ -71,17 +71,17 @@ func main() {
 	}
 
 	invoiceReq := sakurupiah.CreateInvoiceRequest{
-		Method:       sakurupiah.MethodBCAVA,
-		CustomerName: "Jane Smith",
+		Method:        sakurupiah.MethodBCAVA,
+		CustomerName:  "Jane Smith",
 		CustomerEmail: "jane@example.com",
 		CustomerPhone: "628987654321",
-		Amount:       200000,
-		MerchantFee:  int(sakurupiah.FeeTypeMerchant),
-		MerchantRef:  "INV-2025-002",
-		Expired:      24,
-		Products:     products,
-		CallbackURL:  "https://yourdomain.com/callback",
-		ReturnURL:    "https://yourdomain.com/return",
+		Amount:        200000,
+		MerchantFee:   int(sakurupiah.FeeTypeMerchant),
+		MerchantRef:   "INV-2025-002",
+		Expired:       24,
+		Products:      products,
+		CallbackURL:   "https://yourdomain.com/callback",
+		ReturnURL:     "https://yourdomain.com/return",
 	}
 
 	invoiceWithProducts, err := client.CreateInvoice(invoiceReq)

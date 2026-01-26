@@ -91,15 +91,15 @@ func (c *Client) CreateInvoice(req CreateInvoiceRequest) (*CreateInvoiceResponse
 
 	// Build form data
 	data := map[string]string{
-		"api_id":        c.apiID,
-		"method":        req.Method,
-		"phone":         req.CustomerPhone,
-		"amount":        strconv.FormatInt(req.Amount, 10),
-		"merchant_fee":  strconv.Itoa(req.MerchantFee),
-		"merchant_ref":  req.MerchantRef,
-		"callback_url":  callbackURL,
-		"return_url":    returnURL,
-		"signature":     signature,
+		"api_id":       c.apiID,
+		"method":       req.Method,
+		"phone":        req.CustomerPhone,
+		"amount":       strconv.FormatInt(req.Amount, 10),
+		"merchant_fee": strconv.Itoa(req.MerchantFee),
+		"merchant_ref": req.MerchantRef,
+		"callback_url": callbackURL,
+		"return_url":   returnURL,
+		"signature":    signature,
 	}
 
 	if req.CustomerName != "" {
@@ -175,11 +175,11 @@ func (c *Client) CreateInvoiceWithProducts(
 	products []Product,
 ) (*CreateInvoiceResponse, error) {
 	return c.CreateInvoice(CreateInvoiceRequest{
-		Method:      method,
+		Method:        method,
 		CustomerPhone: phone,
-		Amount:      amount,
-		MerchantRef: merchantRef,
-		Products:    products,
+		Amount:        amount,
+		MerchantRef:   merchantRef,
+		Products:      products,
 	})
 }
 
@@ -223,12 +223,12 @@ func (c *Client) CreateInvoiceSimple(
 	returnURL string,
 ) (*CreateInvoiceResponse, error) {
 	return c.CreateInvoice(CreateInvoiceRequest{
-		Method:       method,
-		CustomerName: name,
+		Method:        method,
+		CustomerName:  name,
 		CustomerPhone: phone,
-		Amount:       amount,
-		MerchantRef:  merchantRef,
-		CallbackURL:  callbackURL,
-		ReturnURL:    returnURL,
+		Amount:        amount,
+		MerchantRef:   merchantRef,
+		CallbackURL:   callbackURL,
+		ReturnURL:     returnURL,
 	})
 }

@@ -72,12 +72,12 @@ const (
 // The client uses Bearer token authentication with your API Key.
 // Set IsSandbox to true when developing and testing.
 type Client struct {
-	apiID     string     // API ID obtained from Sakurupiah dashboard
-	apiKey    string     // API Key obtained from Sakurupiah dashboard
-	baseURL   string     // Base URL for API requests (production or sandbox)
-	httpClient *http.Client // HTTP client for making requests
-	callbackURL string     // Default callback URL for payment notifications
-	returnURL   string     // Default return URL for redirect after payment
+	apiID       string       // API ID obtained from Sakurupiah dashboard
+	apiKey      string       // API Key obtained from Sakurupiah dashboard
+	baseURL     string       // Base URL for API requests (production or sandbox)
+	httpClient  *http.Client // HTTP client for making requests
+	callbackURL string       // Default callback URL for payment notifications
+	returnURL   string       // Default return URL for redirect after payment
 }
 
 // Config holds the configuration for creating a new Client.
@@ -165,10 +165,10 @@ func NewClient(cfg Config) (*Client, error) {
 	}
 
 	return &Client{
-		apiID:      cfg.APIID,
-		apiKey:     cfg.APIKey,
-		baseURL:    baseURL,
-		httpClient: httpClient,
+		apiID:       cfg.APIID,
+		apiKey:      cfg.APIKey,
+		baseURL:     baseURL,
+		httpClient:  httpClient,
 		callbackURL: cfg.DefaultCallbackURL,
 		returnURL:   cfg.DefaultReturnURL,
 	}, nil

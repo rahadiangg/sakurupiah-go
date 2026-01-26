@@ -278,7 +278,7 @@ func readRequestBody(r *http.Request) ([]byte, error) {
 //
 //	http.HandleFunc("/callback", handler)
 type CallbackHandlerBuilder struct {
-	client   *Client
+	client    *Client
 	onSuccess func(*CallbackRequest) error
 	onExpired func(*CallbackRequest) error
 	onPending func(*CallbackRequest) error
