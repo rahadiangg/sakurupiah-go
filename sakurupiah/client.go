@@ -76,12 +76,13 @@ const (
 // The client uses Bearer token authentication with your API Key.
 // Set IsSandbox to true when developing and testing.
 type Client struct {
-	apiID       string       // API ID obtained from Sakurupiah dashboard
-	apiKey      string       // API Key obtained from Sakurupiah dashboard
-	baseURL     string       // Base URL for API requests (production or sandbox)
-	httpClient  *http.Client // HTTP client for making requests
-	callbackURL string       // Default callback URL for payment notifications
-	returnURL   string       // Default return URL for redirect after payment
+	apiID                string       // API ID obtained from Sakurupiah dashboard
+	apiKey               string       // API Key obtained from Sakurupiah dashboard
+	baseURL              string       // Base URL for API requests (production or sandbox)
+	httpClient           *http.Client // HTTP client for making requests
+	callbackURL          string       // Default callback URL for payment notifications
+	returnURL            string       // Default return URL for redirect after payment
+	defaultPaymentMethod string       // Default payment method for invoices (e.g., "QRIS", "BCAVA")
 }
 
 // Config holds the configuration for creating a new Client.
@@ -96,6 +97,7 @@ type Client struct {
 //   - HTTPClient: Custom HTTP client (default: nil creates a new client)
 //   - DefaultCallbackURL: Default callback URL for all invoices
 //   - DefaultReturnURL: Default return URL for all invoices
+//   - DefaultPaymentMethod: Default payment method (e.g., "QRIS", "BCAVA", "DANA")
 type Config struct {
 	// API ID is obtained from Sakurupiah dashboard
 	APIID string
@@ -115,6 +117,11 @@ type Config struct {
 	// DefaultReturnURL is the default return URL for transactions
 	// If set, invoices created without a return URL will use this value
 	DefaultReturnURL string
+	// DefaultPaymentMethod is the default payment method for transactions
+	// If set, invoices created without a payment method will use this value
+	// Common values: "QRIS", "BCAVA", "BRIVA", "DANA", "OVO", "GOPAY", etc.
+	// See types.go for all available payment method constants
+	DefaultPaymentMethod string
 }
 
 // NewClient creates a new Sakurupiah API client with the given configuration.
@@ -169,12 +176,13 @@ func NewClient(cfg Config) (*Client, error) {
 	}
 
 	return &Client{
-		apiID:       cfg.APIID,
-		apiKey:      cfg.APIKey,
-		baseURL:     baseURL,
-		httpClient:  httpClient,
-		callbackURL: cfg.DefaultCallbackURL,
-		returnURL:   cfg.DefaultReturnURL,
+		apiID:                cfg.APIID,
+		apiKey:               cfg.APIKey,
+		baseURL:              baseURL,
+		httpClient:           httpClient,
+		callbackURL:          cfg.DefaultCallbackURL,
+		returnURL:            cfg.DefaultReturnURL,
+		defaultPaymentMethod: cfg.DefaultPaymentMethod,
 	}, nil
 }
 
@@ -210,6 +218,23 @@ func (c *Client) SetDefaultCallbackURL(callbackURL string) {
 // This is useful for avoiding repetitive return URL configuration.
 func (c *Client) SetDefaultReturnURL(returnURL string) {
 	c.returnURL = returnURL
+}
+
+// SetDefaultPaymentMethod sets the default payment method for all invoices.
+// If set, invoices created without a payment method will use this value.
+// Common values: "QRIS", "BCAVA", "BRIVA", "DANA", "OVO", "GOPAY", etc.
+//
+// # Example
+//
+//	client.SetDefaultPaymentMethod(sakurupiah.MethodQRIS)
+func (c *Client) SetDefaultPaymentMethod(method string) {
+	c.defaultPaymentMethod = method
+}
+
+// GetDefaultPaymentMethod returns the default payment method.
+// Returns empty string if no default is set.
+func (c *Client) GetDefaultPaymentMethod() string {
+	return c.defaultPaymentMethod
 }
 
 // GenerateSignature creates an HMAC-SHA256 signature for invoice creation.

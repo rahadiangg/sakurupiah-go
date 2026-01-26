@@ -52,10 +52,16 @@ import (
 //
 // *CreateInvoiceResponse containing the transaction details including TrxID and checkout URL
 func (c *Client) CreateInvoice(req CreateInvoiceRequest) (*CreateInvoiceResponse, error) {
-	// Validate required fields
-	if req.Method == "" {
+	// Use default payment method if not specified
+	method := req.Method
+	if method == "" {
+		method = c.defaultPaymentMethod
+	}
+	if method == "" {
 		return nil, ErrMissingMethod
 	}
+
+	// Validate required fields
 	if req.CustomerPhone == "" {
 		return nil, ErrInvalidPhone
 	}
@@ -87,12 +93,12 @@ func (c *Client) CreateInvoice(req CreateInvoiceRequest) (*CreateInvoiceResponse
 	}
 
 	// Generate signature
-	signature := c.GenerateSignature(req.Method, req.MerchantRef, req.Amount)
+	signature := c.GenerateSignature(method, req.MerchantRef, req.Amount)
 
 	// Build form data
 	data := map[string]string{
 		"api_id":       c.apiID,
-		"method":       req.Method,
+		"method":       method,
 		"phone":        req.CustomerPhone,
 		"amount":       strconv.FormatInt(req.Amount, 10),
 		"merchant_fee": strconv.Itoa(req.MerchantFee),

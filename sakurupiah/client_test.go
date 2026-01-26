@@ -171,6 +171,7 @@ func TestClientSetters(t *testing.T) {
 
 	newCallbackURL := "https://new-example.com/callback"
 	newReturnURL := "https://new-example.com/return"
+	newPaymentMethod := MethodQRIS
 
 	client.SetDefaultCallbackURL(newCallbackURL)
 	if client.callbackURL != newCallbackURL {
@@ -180,6 +181,67 @@ func TestClientSetters(t *testing.T) {
 	client.SetDefaultReturnURL(newReturnURL)
 	if client.returnURL != newReturnURL {
 		t.Errorf("SetDefaultReturnURL() = %v, want %v", client.returnURL, newReturnURL)
+	}
+
+	client.SetDefaultPaymentMethod(newPaymentMethod)
+	if client.defaultPaymentMethod != newPaymentMethod {
+		t.Errorf("SetDefaultPaymentMethod() = %v, want %v", client.defaultPaymentMethod, newPaymentMethod)
+	}
+
+	if client.GetDefaultPaymentMethod() != newPaymentMethod {
+		t.Errorf("GetDefaultPaymentMethod() = %v, want %v", client.GetDefaultPaymentMethod(), newPaymentMethod)
+	}
+}
+
+// TestDefaultPaymentMethod tests default payment method configuration
+func TestDefaultPaymentMethod(t *testing.T) {
+	tests := []struct {
+		name                  string
+		config                Config
+		expectedPaymentMethod string
+	}{
+		{
+			name: "with default payment method",
+			config: Config{
+				APIID:                "TEST-12345",
+				APIKey:               "test-key-12345",
+				DefaultPaymentMethod: MethodQRIS,
+			},
+			expectedPaymentMethod: MethodQRIS,
+		},
+		{
+			name: "with different default payment method",
+			config: Config{
+				APIID:                "TEST-12345",
+				APIKey:               "test-key-12345",
+				DefaultPaymentMethod: MethodDANA,
+			},
+			expectedPaymentMethod: MethodDANA,
+		},
+		{
+			name: "without default payment method",
+			config: Config{
+				APIID:  "TEST-12345",
+				APIKey: "test-key-12345",
+			},
+			expectedPaymentMethod: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client, err := NewClient(tt.config)
+			if err != nil {
+				t.Fatalf("NewClient() error = %v", err)
+			}
+
+			if client.defaultPaymentMethod != tt.expectedPaymentMethod {
+				t.Errorf("client.defaultPaymentMethod = %v, want %v", client.defaultPaymentMethod, tt.expectedPaymentMethod)
+			}
+			if client.GetDefaultPaymentMethod() != tt.expectedPaymentMethod {
+				t.Errorf("GetDefaultPaymentMethod() = %v, want %v", client.GetDefaultPaymentMethod(), tt.expectedPaymentMethod)
+			}
+		})
 	}
 }
 

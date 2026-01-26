@@ -576,3 +576,184 @@ func TestErrorResponseFields(t *testing.T) {
 		t.Errorf("Message = %v, want Invalid request", errResp.Message)
 	}
 }
+
+// TestIsValidPaymentMethod tests payment method validation
+func TestIsValidPaymentMethod(t *testing.T) {
+	tests := []struct {
+		name     string
+		method   string
+		expected bool
+	}{
+		// QRIS methods
+		{"QRIS", MethodQRIS, true},
+		{"QRIS2", MethodQRIS2, true},
+		{"QRISM", MethodQRISM, true},
+		{"QRISC", MethodQRISC, true},
+		// VA methods
+		{"BCAVA", MethodBCAVA, true},
+		{"BRIVA", MethodBRIVA, true},
+		{"BNIVA", MethodBNIVA, true},
+		{"MANDIRIVA", MethodMANDIRIVA, true},
+		// E-Wallet methods
+		{"DANA", MethodDANA, true},
+		{"OVO", MethodOVO, true},
+		{"GOPAY", MethodGOPAY, true},
+		{"SHOPEEPAY", MethodSHOPEEPAY, true},
+		// Retail methods
+		{"ALFAMART", MethodALFAMART, true},
+		{"INDOMARET", MethodINDOMARET, true},
+		// Invalid methods
+		{"INVALID", "INVALID", false},
+		{"CREDIT_CARD", "CREDIT_CARD", false},
+		{"", "", false},
+		{"qris", "qris", false}, // lowercase should fail
+		{"Qris", "Qris", false}, // mixed case should fail
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsValidPaymentMethod(tt.method)
+			if result != tt.expected {
+				t.Errorf("IsValidPaymentMethod(%q) = %v, want %v", tt.method, result, tt.expected)
+			}
+		})
+	}
+}
+
+// TestGetPaymentMethodsByCategory tests payment method category retrieval
+func TestGetPaymentMethodsByCategory(t *testing.T) {
+	tests := []struct {
+		name           string
+		category       string
+		expectedCount  int
+		containsMethod string
+	}{
+		{"QRIS category", "qris", 4, MethodQRIS},
+		{"VA category", "va", 13, MethodBCAVA},
+		{"E-Wallet category", "ewallet", 5, MethodDANA},
+		{"Retail category", "retail", 2, MethodALFAMART},
+		{"Invalid category", "invalid", 0, ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := GetPaymentMethodsByCategory(tt.category)
+			if len(result) != tt.expectedCount {
+				t.Errorf("GetPaymentMethodsByCategory(%q) returned %d methods, want %d", tt.category, len(result), tt.expectedCount)
+			}
+			if tt.containsMethod != "" {
+				found := false
+				for _, m := range result {
+					if m == tt.containsMethod {
+						found = true
+						break
+					}
+				}
+				if !found {
+					t.Errorf("GetPaymentMethodsByCategory(%q) does not contain %q", tt.category, tt.containsMethod)
+				}
+			}
+		})
+	}
+}
+
+// TestIsQRISMethod tests QRIS method checking
+func TestIsQRISMethod(t *testing.T) {
+	tests := []struct {
+		name     string
+		method   string
+		expected bool
+	}{
+		{"QRIS", MethodQRIS, true},
+		{"QRIS2", MethodQRIS2, true},
+		{"QRISM", MethodQRISM, true},
+		{"QRISC", MethodQRISC, true},
+		{"BCAVA", MethodBCAVA, false},
+		{"DANA", MethodDANA, false},
+		{"ALFAMART", MethodALFAMART, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsQRISMethod(tt.method)
+			if result != tt.expected {
+				t.Errorf("IsQRISMethod(%q) = %v, want %v", tt.method, result, tt.expected)
+			}
+		})
+	}
+}
+
+// TestIsVAMethod tests Virtual Account method checking
+func TestIsVAMethod(t *testing.T) {
+	tests := []struct {
+		name     string
+		method   string
+		expected bool
+	}{
+		{"BCAVA", MethodBCAVA, true},
+		{"BRIVA", MethodBRIVA, true},
+		{"BNIVA", MethodBNIVA, true},
+		{"MANDIRIVA", MethodMANDIRIVA, true},
+		{"QRIS", MethodQRIS, false},
+		{"DANA", MethodDANA, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsVAMethod(tt.method)
+			if result != tt.expected {
+				t.Errorf("IsVAMethod(%q) = %v, want %v", tt.method, result, tt.expected)
+			}
+		})
+	}
+}
+
+// TestIsEWalletMethod tests E-Wallet method checking
+func TestIsEWalletMethod(t *testing.T) {
+	tests := []struct {
+		name     string
+		method   string
+		expected bool
+	}{
+		{"DANA", MethodDANA, true},
+		{"OVO", MethodOVO, true},
+		{"GOPAY", MethodGOPAY, true},
+		{"SHOPEEPAY", MethodSHOPEEPAY, true},
+		{"LINKAJA", MethodLINKAJA, true},
+		{"QRIS", MethodQRIS, false},
+		{"BCAVA", MethodBCAVA, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsEWalletMethod(tt.method)
+			if result != tt.expected {
+				t.Errorf("IsEWalletMethod(%q) = %v, want %v", tt.method, result, tt.expected)
+			}
+		})
+	}
+}
+
+// TestIsRetailMethod tests retail payment method checking
+func TestIsRetailMethod(t *testing.T) {
+	tests := []struct {
+		name     string
+		method   string
+		expected bool
+	}{
+		{"ALFAMART", MethodALFAMART, true},
+		{"INDOMARET", MethodINDOMARET, true},
+		{"QRIS", MethodQRIS, false},
+		{"BCAVA", MethodBCAVA, false},
+		{"DANA", MethodDANA, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := IsRetailMethod(tt.method)
+			if result != tt.expected {
+				t.Errorf("IsRetailMethod(%q) = %v, want %v", tt.method, result, tt.expected)
+			}
+		})
+	}
+}

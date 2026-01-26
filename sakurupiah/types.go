@@ -446,6 +446,115 @@ const (
 	MethodINDOMARET = "INDOMARET"
 )
 
+// AllPaymentMethods is a slice containing all valid payment method codes.
+// Use this for validation or iteration over available payment methods.
+var AllPaymentMethods = []string{
+	// QRIS
+	MethodQRIS, MethodQRIS2, MethodQRISM, MethodQRISC,
+	// Virtual Accounts
+	MethodBCAVA, MethodBRIVA, MethodBNIVA, MethodBAGVA, MethodBNCVA,
+	MethodSINARMAS, MethodMANDIRIVA, MethodPERMATAVA, MethodCIMBVA,
+	MethodDANAMON, MethodMUAMALAT, MethodBSIVA, MethodOCBC,
+	// E-Wallets
+	MethodGOPAY, MethodDANA, MethodOVO, MethodSHOPEEPAY, MethodLINKAJA,
+	// Retail
+	MethodALFAMART, MethodINDOMARET,
+}
+
+// PaymentMethodCategories groups payment methods by their type.
+var PaymentMethodCategories = map[string][]string{
+	"qris":    {MethodQRIS, MethodQRIS2, MethodQRISM, MethodQRISC},
+	"va":      {MethodBCAVA, MethodBRIVA, MethodBNIVA, MethodBAGVA, MethodBNCVA, MethodSINARMAS, MethodMANDIRIVA, MethodPERMATAVA, MethodCIMBVA, MethodDANAMON, MethodMUAMALAT, MethodBSIVA, MethodOCBC},
+	"ewallet": {MethodGOPAY, MethodDANA, MethodOVO, MethodSHOPEEPAY, MethodLINKAJA},
+	"retail":  {MethodALFAMART, MethodINDOMARET},
+}
+
+// IsValidPaymentMethod checks if the given payment method code is valid.
+//
+// This function validates the payment method against the list of known
+// payment method constants. It's useful for validating user input or
+// configuration before making API requests.
+//
+// # Example
+//
+//	if !sakurupiah.IsValidPaymentMethod("QRIS") {
+//	    log.Fatal("Invalid payment method")
+//	}
+//
+// # Parameters
+//
+//   - method: Payment method code to validate
+//
+// # Return
+//
+// true if the payment method is valid, false otherwise
+func IsValidPaymentMethod(method string) bool {
+	for _, validMethod := range AllPaymentMethods {
+		if method == validMethod {
+			return true
+		}
+	}
+	return false
+}
+
+// GetPaymentMethodsByCategory returns payment methods for a specific category.
+//
+// Valid categories are:
+//   - "qris": QRIS payment methods
+//   - "va": Virtual Account payment methods
+//   - "ewallet": E-Wallet payment methods
+//   - "retail": Retail payment methods (Alfamart, Indomaret)
+//
+// Returns an empty slice if the category is invalid.
+//
+// # Example
+//
+//	qrisMethods := sakurupiah.GetPaymentMethodsByCategory("qris")
+//	// Returns: ["QRIS", "QRIS2", "QRISM", "QRISC"]
+func GetPaymentMethodsByCategory(category string) []string {
+	return PaymentMethodCategories[category]
+}
+
+// IsQRISMethod checks if the given payment method is a QRIS variant.
+func IsQRISMethod(method string) bool {
+	for _, m := range PaymentMethodCategories["qris"] {
+		if method == m {
+			return true
+		}
+	}
+	return false
+}
+
+// IsVAMethod checks if the given payment method is a Virtual Account.
+func IsVAMethod(method string) bool {
+	for _, m := range PaymentMethodCategories["va"] {
+		if method == m {
+			return true
+		}
+	}
+	return false
+}
+
+// IsEWalletMethod checks if the given payment method is an E-Wallet.
+func IsEWalletMethod(method string) bool {
+	for _, m := range PaymentMethodCategories["ewallet"] {
+		if method == m {
+			return true
+		}
+	}
+	return false
+}
+
+// IsRetailMethod checks if the given payment method is a retail payment (Alfamart/Indomaret).
+func IsRetailMethod(method string) bool {
+	for _, m := range PaymentMethodCategories["retail"] {
+		if method == m {
+			return true
+		}
+	}
+	return false
+}
+
 // FormatExpiredTime returns a formatted expiration time.
 //
 // Parses the Expired field string into a time.Time value.
