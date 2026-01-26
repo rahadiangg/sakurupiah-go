@@ -169,7 +169,8 @@ func (c *Client) HandleCallbackWithFunc(headers http.Header, body []byte, handle
 //   - resp: CallbackResponse containing the response data
 func SendCallbackResponse(w http.ResponseWriter, resp CallbackResponse) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(resp)
+	// Ignore encoding error as we're setting the header and the response is already committed
+	_ = json.NewEncoder(w).Encode(resp)
 }
 
 // CallbackHandlerFunc is a function type for handling callbacks.
@@ -404,7 +405,7 @@ func (b *CallbackHandlerBuilder) Build() http.HandlerFunc {
 		callback, err := b.client.VerifyAndParseCallback(r.Header, body)
 		if err != nil {
 			if b.onError != nil {
-				b.onError(nil, err)
+				_ = b.onError(nil, err)
 			}
 			w.WriteHeader(http.StatusBadRequest)
 			SendCallbackResponse(w, CallbackResponse{
@@ -432,7 +433,7 @@ func (b *CallbackHandlerBuilder) Build() http.HandlerFunc {
 		}
 
 		if handlerErr != nil && b.onError != nil {
-			b.onError(callback, handlerErr)
+			_ = b.onError(callback, handlerErr)
 		}
 
 		// Send response

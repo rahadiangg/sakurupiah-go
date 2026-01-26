@@ -397,6 +397,9 @@ func (c *Client) doJSONRequestWithArray(endpoint string, data map[string]string,
 }
 
 // postRawJSON performs a POST request with raw JSON body
+// Note: Currently unused but kept for potential future use
+//
+//nolint:unused // Kept for potential future API endpoints that may require JSON body
 func (c *Client) postRawJSON(endpoint string, jsonBody []byte) (*http.Response, error) {
 	reqURL := c.baseURL + endpoint
 	req, err := http.NewRequest(http.MethodPost, reqURL, bytes.NewReader(jsonBody))
