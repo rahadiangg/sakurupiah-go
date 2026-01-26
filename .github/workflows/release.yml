@@ -31,21 +31,27 @@ jobs:
       - name: Generate changelog
         id: changelog
         run: |
-          # Get the previous tag
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-
-          # Generate changelog
-          if [ -z "$PREV_TAG" ]; then
-            echo "## What's Changed" > changelog.md
-            git log --pretty=format:"- %s" >> changelog.md
+          # Use existing CHANGELOG.md
+          if [ -f "CHANGELOG.md" ]; then
+            {
+              echo 'changelog<<DELIMITER'
+              cat CHANGELOG.md
+              echo 'DELIMITER'
+            } >> "$GITHUB_OUTPUT"
           else
-            echo "## What's Changed" > changelog.md
-            git log ${PREV_TAG}..HEAD --pretty=format:"- %s" >> changelog.md
+            # Fallback: generate from git log if CHANGELOG.md doesn't exist
+            PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+            {
+              echo 'changelog<<DELIMITER'
+              echo "## What's Changed"
+              if [ -z "$PREV_TAG" ]; then
+                git log --pretty=format:"- %s"
+              else
+                git log ${PREV_TAG}..HEAD --pretty=format:"- %s"
+              fi
+              echo 'DELIMITER'
+            } >> "$GITHUB_OUTPUT"
           fi
-
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          cat changelog.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

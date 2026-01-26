@@ -1,4 +1,8 @@
-// Package sakurupiah provides a Go SDK for integrating with the Sakurupiah Payment Gateway.
+// Package sakurupiah provides an UNOFFICIAL Go SDK for integrating with the
+// Sakurupiah Payment Gateway.
+//
+// This package is NOT officially maintained or endorsed by Sakurupiah. It is a
+// community-maintained SDK for integration purposes.
 //
 // The SDK supports creating payment invoices, listing payment channels, checking balance,
 // querying transaction history, and handling payment callbacks with signature verification.

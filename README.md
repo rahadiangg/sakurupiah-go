@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Go Version](https://img.shields.io/badge/go-%3E%3D1.21-%2300ADD8.svg)](https://golang.org)
 
-Official Go SDK for integrating with the [Sakurupiah Payment Gateway](https://sakurupiah.id).
+> **⚠️ Unofficial SDK** - This is an unofficial Go SDK for the [Sakurupiah Payment Gateway](https://sakurupiah.id). It is not officially maintained or endorsed by Sakurupiah.
 
 ## Features
 
@@ -433,4 +433,6 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Disclaimer
 
-This SDK is provided as-is for integration with the Sakurupiah Payment Gateway API. Please refer to the [official Sakurupiah documentation](https://sakurupiah.id/developers) for the most up-to-date API information.
+**This is an UNOFFICIAL SDK** and is not affiliated with, endorsed by, or officially supported by Sakurupiah. It is a community-maintained project for integration purposes.
+
+Please refer to the [official Sakurupiah documentation](https://sakurupiah.id/developers) for the most up-to-date API information and official support channels.
