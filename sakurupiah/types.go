@@ -421,10 +421,10 @@ const (
 
 const (
 	// QRIS Payment Methods
-	MethodQRIS  = "QRIS"
-	MethodQRIS2 = "QRIS2"
-	MethodQRISM = "QRISM"
-	MethodQRISC = "QRISC"
+	MethodQRIS   = "QRIS"
+	MethodQRIS2  = "QRIS2"
+	MethodQRISMU = "QRISMU"
+	MethodQRISC  = "QRISC"
 
 	// Virtual Account Payment Methods
 	MethodBCAVA     = "BCAVA"
@@ -445,8 +445,8 @@ const (
 	MethodGOPAY     = "GOPAY"
 	MethodDANA      = "DANA"
 	MethodOVO       = "OVO"
-	MethodSHOPEEPAY = "SHOPEEPAY"
-	MethodLINKAJA   = "LINKAJA"
+	MethodSHOPEEPAY = "ShopeePay"
+	MethodLINKAJA   = "LinkAja"
 
 	// Retail Payment Methods
 	MethodALFAMART  = "ALFAMART"
@@ -457,7 +457,7 @@ const (
 // Use this for validation or iteration over available payment methods.
 var AllPaymentMethods = []string{
 	// QRIS
-	MethodQRIS, MethodQRIS2, MethodQRISM, MethodQRISC,
+	MethodQRIS, MethodQRIS2, MethodQRISMU, MethodQRISC,
 	// Virtual Accounts
 	MethodBCAVA, MethodBRIVA, MethodBNIVA, MethodBAGVA, MethodBNCVA,
 	MethodSINARMAS, MethodMANDIRIVA, MethodPERMATAVA, MethodCIMBVA,
@@ -470,7 +470,7 @@ var AllPaymentMethods = []string{
 
 // PaymentMethodCategories groups payment methods by their type.
 var PaymentMethodCategories = map[string][]string{
-	"qris":    {MethodQRIS, MethodQRIS2, MethodQRISM, MethodQRISC},
+	"qris":    {MethodQRIS, MethodQRIS2, MethodQRISMU, MethodQRISC},
 	"va":      {MethodBCAVA, MethodBRIVA, MethodBNIVA, MethodBAGVA, MethodBNCVA, MethodSINARMAS, MethodMANDIRIVA, MethodPERMATAVA, MethodCIMBVA, MethodDANAMON, MethodMUAMALAT, MethodBSIVA, MethodOCBC},
 	"ewallet": {MethodGOPAY, MethodDANA, MethodOVO, MethodSHOPEEPAY, MethodLINKAJA},
 	"retail":  {MethodALFAMART, MethodINDOMARET},
@@ -517,7 +517,7 @@ func IsValidPaymentMethod(method string) bool {
 // # Example
 //
 //	qrisMethods := sakurupiah.GetPaymentMethodsByCategory("qris")
-//	// Returns: ["QRIS", "QRIS2", "QRISM", "QRISC"]
+//	// Returns: ["QRIS", "QRIS2", "QRISMU", "QRISC"]
 func GetPaymentMethodsByCategory(category string) []string {
 	return PaymentMethodCategories[category]
 }

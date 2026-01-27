@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full godoc documentation and examples
 
 ### Payment Methods Supported
-- **QRIS**: QRIS, QRIS2, QRISM, QRISC
+- **QRIS**: QRIS, QRIS2, QRISMU, QRISC
 - **Virtual Accounts**: BCAVA, BRIVA, BNIVA, BAGVA, BNCVA, SINARMAS, MANDIRIVA, PERMATAVA, CIMBVA, DANAMON, MUAMALAT, BSIVA, OCBC
 - **E-Wallets**: GOPAY, DANA, OVO, ShopeePay, LinkAja
 - **Retail**: Alfamart, Indomaret

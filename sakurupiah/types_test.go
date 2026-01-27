@@ -587,7 +587,7 @@ func TestIsValidPaymentMethod(t *testing.T) {
 		// QRIS methods
 		{"QRIS", MethodQRIS, true},
 		{"QRIS2", MethodQRIS2, true},
-		{"QRISM", MethodQRISM, true},
+		{"QRISMU", MethodQRISMU, true},
 		{"QRISC", MethodQRISC, true},
 		// VA methods
 		{"BCAVA", MethodBCAVA, true},
@@ -598,7 +598,7 @@ func TestIsValidPaymentMethod(t *testing.T) {
 		{"DANA", MethodDANA, true},
 		{"OVO", MethodOVO, true},
 		{"GOPAY", MethodGOPAY, true},
-		{"SHOPEEPAY", MethodSHOPEEPAY, true},
+		{"ShopeePay", MethodSHOPEEPAY, true},
 		// Retail methods
 		{"ALFAMART", MethodALFAMART, true},
 		{"INDOMARET", MethodINDOMARET, true},
@@ -666,7 +666,7 @@ func TestIsQRISMethod(t *testing.T) {
 	}{
 		{"QRIS", MethodQRIS, true},
 		{"QRIS2", MethodQRIS2, true},
-		{"QRISM", MethodQRISM, true},
+		{"QRISMU", MethodQRISMU, true},
 		{"QRISC", MethodQRISC, true},
 		{"BCAVA", MethodBCAVA, false},
 		{"DANA", MethodDANA, false},

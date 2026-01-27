@@ -153,7 +153,7 @@ The SDK provides type-safe constants for all supported payment methods:
 // QRIS Methods
 sakurupiah.MethodQRIS   // "QRIS"
 sakurupiah.MethodQRIS2  // "QRIS2"
-sakurupiah.MethodQRISM  // "QRISM"
+sakurupiah.MethodQRISMU // "QRISMU"
 sakurupiah.MethodQRISC  // "QRISC"
 
 // Virtual Accounts
@@ -166,7 +166,7 @@ sakurupiah.MethodBNIVA     // "BNIVA"
 sakurupiah.MethodGOPAY     // "GOPAY"
 sakurupiah.MethodDANA      // "DANA"
 sakurupiah.MethodOVO       // "OVO"
-sakurupiah.MethodSHOPEEPAY // "SHOPEEPAY"
+sakurupiah.MethodSHOPEEPAY // "ShopeePay"
 sakurupiah.MethodLINKAJA   // "LINKAJA"
 
 // Retail
