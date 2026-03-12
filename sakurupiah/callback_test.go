@@ -595,3 +595,212 @@ func TestCallbackHeaders(t *testing.T) {
 		t.Errorf("Event = %v, want payment_status", headers.Event)
 	}
 }
+
+// TestCallbackHandlerBuilderOnError tests the OnError handler in the builder
+func TestCallbackHandlerBuilderOnError(t *testing.T) {
+	config := Config{
+		APIID:  "TEST-12345",
+		APIKey: "test-key-67890",
+	}
+
+	client, err := NewClient(config)
+	if err != nil {
+		t.Fatalf("NewClient() error = %v", err)
+	}
+
+	callbackPayload := CallbackRequest{
+		TrxID:       "TRX123",
+		MerchantRef: "REF123",
+		Status:      StatusSuccess,
+		StatusCode:  FlexibleStatusCode(StatusCodeSuccess),
+	}
+
+	jsonPayload, _ := json.Marshal(callbackPayload)
+
+	// Generate valid signature
+	h := hmac.New(sha256.New, []byte(client.apiKey))
+	h.Write(jsonPayload)
+	validSignature := hex.EncodeToString(h.Sum(nil))
+
+	t.Run("OnError called when handler returns error", func(t *testing.T) {
+		var errorCallbackCalled bool
+		var capturedCallback *CallbackRequest
+		var capturedError error
+
+		builder := NewCallbackHandlerBuilder(client).
+			OnSuccess(func(callback *CallbackRequest) error {
+				return ErrInvalidSignature
+			}).
+			OnError(func(callback *CallbackRequest, err error) error {
+				errorCallbackCalled = true
+				capturedCallback = callback
+				capturedError = err
+				return nil
+			})
+
+		handler := builder.Build()
+
+		req := httptest.NewRequest(http.MethodPost, "/callback", strings.NewReader(string(jsonPayload)))
+		req.Header.Set("X-Callback-Signature", validSignature)
+		req.Header.Set("X-Callback-Event", "payment_status")
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		handler(w, req)
+
+		if !errorCallbackCalled {
+			t.Error("OnError handler should be called when OnSuccess returns error")
+		}
+
+		if capturedCallback == nil {
+			t.Error("OnError should receive the callback")
+		}
+
+		if capturedError == nil {
+			t.Error("OnError should receive the error")
+		}
+	})
+
+	t.Run("OnError called when verification fails", func(t *testing.T) {
+		var errorCallbackCalled bool
+		var capturedCallback *CallbackRequest
+		var capturedError error
+
+		builder := NewCallbackHandlerBuilder(client).
+			OnSuccess(func(callback *CallbackRequest) error {
+				return nil
+			}).
+			OnError(func(callback *CallbackRequest, err error) error {
+				errorCallbackCalled = true
+				capturedCallback = callback
+				capturedError = err
+				return nil
+			})
+
+		handler := builder.Build()
+
+		req := httptest.NewRequest(http.MethodPost, "/callback", strings.NewReader(string(jsonPayload)))
+		req.Header.Set("X-Callback-Signature", "invalid_signature")
+		req.Header.Set("X-Callback-Event", "payment_status")
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		handler(w, req)
+
+		if !errorCallbackCalled {
+			t.Error("OnError handler should be called when signature verification fails")
+		}
+
+		// When verification fails, callback is nil
+		if capturedCallback != nil {
+			t.Error("OnError callback should be nil when verification fails")
+		}
+
+		if capturedError == nil {
+			t.Error("OnError should receive the verification error")
+		}
+	})
+
+	t.Run("OnError not set - no panic", func(t *testing.T) {
+		builder := NewCallbackHandlerBuilder(client).
+			OnSuccess(func(callback *CallbackRequest) error {
+				return ErrInvalidSignature
+			})
+
+		handler := builder.Build()
+
+		req := httptest.NewRequest(http.MethodPost, "/callback", strings.NewReader(string(jsonPayload)))
+		req.Header.Set("X-Callback-Signature", validSignature)
+		req.Header.Set("X-Callback-Event", "payment_status")
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		// Should not panic even though OnError is not set
+		handler(w, req)
+
+		resp := w.Result()
+		resp.Body.Close()
+
+		if resp.StatusCode != http.StatusBadRequest {
+			t.Errorf("StatusCode = %d, want %d", resp.StatusCode, http.StatusBadRequest)
+		}
+	})
+
+	t.Run("OnError for expired payment", func(t *testing.T) {
+		var errorCallbackCalled bool
+
+		expiredPayload := CallbackRequest{
+			TrxID:       "TRX123",
+			MerchantRef: "REF123",
+			Status:      StatusExpired,
+			StatusCode:  FlexibleStatusCode(StatusCodeExpired),
+		}
+
+		jsonExpired, _ := json.Marshal(expiredPayload)
+		h := hmac.New(sha256.New, []byte(client.apiKey))
+		h.Write(jsonExpired)
+		expiredSig := hex.EncodeToString(h.Sum(nil))
+
+		builder := NewCallbackHandlerBuilder(client).
+			OnExpired(func(callback *CallbackRequest) error {
+				return ErrInvalidSignature
+			}).
+			OnError(func(callback *CallbackRequest, err error) error {
+				errorCallbackCalled = true
+				return nil
+			})
+
+		handler := builder.Build()
+
+		req := httptest.NewRequest(http.MethodPost, "/callback", strings.NewReader(string(jsonExpired)))
+		req.Header.Set("X-Callback-Signature", expiredSig)
+		req.Header.Set("X-Callback-Event", "payment_status")
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		handler(w, req)
+
+		if !errorCallbackCalled {
+			t.Error("OnError handler should be called when OnExpired returns error")
+		}
+	})
+
+	t.Run("OnError for pending payment", func(t *testing.T) {
+		var errorCallbackCalled bool
+
+		pendingPayload := CallbackRequest{
+			TrxID:       "TRX123",
+			MerchantRef: "REF123",
+			Status:      StatusPending,
+			StatusCode:  FlexibleStatusCode(StatusCodePending),
+		}
+
+		jsonPending, _ := json.Marshal(pendingPayload)
+		h := hmac.New(sha256.New, []byte(client.apiKey))
+		h.Write(jsonPending)
+		pendingSig := hex.EncodeToString(h.Sum(nil))
+
+		builder := NewCallbackHandlerBuilder(client).
+			OnPending(func(callback *CallbackRequest) error {
+				return ErrInvalidSignature
+			}).
+			OnError(func(callback *CallbackRequest, err error) error {
+				errorCallbackCalled = true
+				return nil
+			})
+
+		handler := builder.Build()
+
+		req := httptest.NewRequest(http.MethodPost, "/callback", strings.NewReader(string(jsonPending)))
+		req.Header.Set("X-Callback-Signature", pendingSig)
+		req.Header.Set("X-Callback-Event", "payment_status")
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		handler(w, req)
+
+		if !errorCallbackCalled {
+			t.Error("OnError handler should be called when OnPending returns error")
+		}
+	})
+}
